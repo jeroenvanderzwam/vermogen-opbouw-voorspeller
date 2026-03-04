@@ -429,6 +429,15 @@ function PensioenTab() {
               <span className="absolute right-3 top-2.5 text-gray-500 text-sm">%</span>
             </div>
           </div>
+          <div className="col-span-2">
+            <Label>Factor A (€/jaar)</Label>
+            <p className="text-xs text-gray-500 mb-1.5">Staat op je UPO (Uniform Pensioenoverzicht) van NN. Is de jaarlijkse aangroei van je pensioenrecht in €, niet de inleg.</p>
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-gray-500 text-sm">€</span>
+              <Input type="number" step="0.01" className="pl-7" defaultValue={store.nnWerkgeversPensioen.factorA ?? ''}
+                onBlur={(e) => handleNNBlur('factorA', e.target.value ? parseFloat(e.target.value) : null)} />
+            </div>
+          </div>
         </CardContent>
       </Card>
 
