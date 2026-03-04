@@ -4,8 +4,10 @@ const TAX_CONSTANTS = {
     box3RentementspercentageSpaargeld: 1.44,
     box3RendementspercentageBeleggingen: 6.17,
     box3BelastingTarief: 36,
-    jaarruimteFranchise: 17545,
-    jaarruimtePercentage: 13.3,
+    jaarruimteFranchise: 18475,       // AOW-franchise 2025
+    jaarruimtePercentage: 30,          // WTP-percentage vanaf 2023
+    jaarruimteFactorAMultiplier: 6.27, // Factor A vermenigvuldiger 2025
+    jaarruimteMaximum: 35798,          // Absolute maximum jaarruimte 2025
     aowLeeftijd: 67,
     // Box 1 schijven 2025
     schijven: [
