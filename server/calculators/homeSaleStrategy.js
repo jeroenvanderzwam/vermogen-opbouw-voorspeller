@@ -9,14 +9,20 @@ function calculateHomeSaleStrategies(data) {
   const verkoopkosten = woning.woningwaarde * 0.02;
   const vrijgekomenKapitaal = Math.max(0, woning.woningwaarde - woning.hypotheekSchuld - verkoopkosten);
 
-  // Jaarruimte calculation for lijfrente
+  // Jaarruimte berekening (WTP-formule, geldig vanaf 2023)
+  // Formule: 30% × (brutoInkomen - franchise) - (6,27 × Factor A)
+  // Factor A = jaarlijkse aangroei pensioenrecht in €, staat op UPO van NN
   const brutoJaarloon = loon.brutoMaandloon * 12;
-  const pensioenaangroei = (data.nnWerkgeversPensioen?.maandelijkseWerkgeversBijdrage +
-    data.nnWerkgeversPensioen?.maandelijkseWerknemersBijdrage) * 12 || 0;
-  const jaarruimte = Math.max(
-    0,
-    constants.jaarruimtePercentage / 100 * (brutoJaarloon - constants.jaarruimteFranchise) - pensioenaangroei
+  const factorA = data.nnWerkgeversPensioen?.factorA || 0;
+  const jaarruimte = Math.min(
+    constants.jaarruimteMaximum,
+    Math.max(
+      0,
+      constants.jaarruimtePercentage / 100 * (brutoJaarloon - constants.jaarruimteFranchise)
+        - constants.jaarruimteFactorAMultiplier * factorA
+    )
   );
+  const factorAOntbreekt = !data.nnWerkgeversPensioen?.factorA;
 
   // Helper: compound growth
   function futureValue(principal, rate, years, annualContribution = 0) {
@@ -158,6 +164,7 @@ function calculateHomeSaleStrategies(data) {
     verkoopkosten: Math.round(verkoopkosten),
     vrijgekomenKapitaal: Math.round(vrijgekomenKapitaal),
     jaarruimte: Math.round(jaarruimte),
+    factorAOntbreekt,
     strategies,
   };
 }
