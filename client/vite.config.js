@@ -11,6 +11,9 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, './src') }
   },
   server: {
+    fs: {
+      allow: ['..'],  // Allow importing from workspace root (data/mijn-gegevens.json)
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:3001',

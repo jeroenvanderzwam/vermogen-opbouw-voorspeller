@@ -1,48 +1,26 @@
 import { create } from 'zustand'
+import seedData from '../../../data/mijn-gegevens.json'
 
-const seedData = {
-  profile: { geboortejaar: 1991, fiscaalPartner: false, doelleeftijd: 40 },
-  loon: {
-    brutoMaandloon: 5600,
-    nettoMaandloon: 3800,
-    maandelijkseUitgaven: 1800,
-    verwachteLoongroei: 3,
-    inflatie: 2.5,
-  },
-  bankrekeningen: [
-    { id: 'Hr J van der Zwam', naam: 'Betaalrekening', saldo: 1000, rente: 0, type: 'betaalrekening' },
-    { id: 'Spaardoel Toprekening', naam: 'Spaarrekening', saldo: 5000, rente: 1.25, type: 'spaarrekening' },
-  ],
-  deGiroPortfolio: {
-    huidigeSaldo: 20000,
-    verwachtJaarlijksRendement: 7,
-    maandelijkseInleg: 1000,
-  },
-  nnWerkgeversPensioen: {
-    opgebouwdKapitaal: 25000,
-    verwachtPensioenLeeftijd: 67,
-    maandelijkseWerkgeversBijdrage: 200,
-    maandelijkseWerknemersBijdrage: 200,
-    pensioenrendement: 4,
-  },
-  deGiroPersoonlijkPensioen: {
-    huidigSaldo: 3500,
-    maandelijkseInleg: 250,
-    verwachtRendement: 7,
-    type: 'lijfrente',
-  },
-  woning: {
-    woningwaarde: 290000,
-    hypotheekSchuld: 65000,
-    verkoopGepland: true,
-    verwachteVerkoopDatum: '2026-08',
-    jaarlijkseWaardegroei: 3,
-  },
+const SEED_HASH_KEY = 'financialDataSeedHash'
+const DATA_KEY = 'financialData'
+
+function computeHash(obj) {
+  return JSON.stringify(obj)
 }
 
 function loadFromStorage() {
   try {
-    const saved = localStorage.getItem('financialData')
+    const currentHash = computeHash(seedData)
+    const storedHash = localStorage.getItem(SEED_HASH_KEY)
+
+    // Als mijn-gegevens.json veranderd is, gooi localStorage weg
+    if (storedHash !== currentHash) {
+      localStorage.removeItem(DATA_KEY)
+      localStorage.setItem(SEED_HASH_KEY, currentHash)
+      return null
+    }
+
+    const saved = localStorage.getItem(DATA_KEY)
     if (saved) {
       return JSON.parse(saved)
     }
